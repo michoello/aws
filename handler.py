@@ -1,9 +1,7 @@
-# Test 2
+# Test 3
 import json
-
 import boto3
 from botocore.exceptions import ClientError
-
 
 def hello(event, context):
   SENDER = "michael.dolinin@gmail.com"
@@ -16,7 +14,8 @@ def hello(event, context):
              "This email was sent with Amazon SES using the "
              "AWS SDK for Python (Boto)."
             )
-            
+      
+  STATUS_CODE = 200      
   # The HTML body of the email.
   body_html = """<html>
 <head></head>
@@ -30,7 +29,6 @@ def hello(event, context):
   output = event
   for k in output:
       body_html = body_html + "<b>" + k + "</b>:<i>" + output[k] + "</i><br>"
-    
       
   body_html = body_html + """  
 </body>
@@ -73,12 +71,13 @@ def hello(event, context):
   # Display an error if something goes wrong.	
   except ClientError as e:
     output['error_message'] = e.response['Error']['Message']
+    STATUS_CODE = 500
   else:
     output['ok_message'] = response['MessageId']
     
   return {
-        'statusCode': 200,
-        'body': json.dumps(output)
+    'statusCode': STATUS_CODE,
+    'body': json.dumps(output)
   }
 
 
